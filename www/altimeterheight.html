@@ -1,0 +1,202 @@
+<html>
+
+<!--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ // Timeseries plotting of Basin average parameters
+ // Written by Nishan Kumar Biswas
+ // PhD Student and Graduate Research Assistant
+ // Department of CEE, University of Washington
+ // nbiswas@uw.edu, nishan.wre.buet@gmail.com
+ // www.students.washington.edu/nbiswas
+
+-->
+
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-143541579-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-143541579-1');
+</script>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script>
+    function getParamValue(paramName) {
+        var url = window.location.search.substring(1); //get rid of "?" in querystring
+        var qArray = url.split('&'); //get key-value pairs
+        for (var i = 0; i < qArray.length; i++) {
+            var pArr = qArray[i].split('='); //split key and value
+            if (pArr[0] == paramName)
+                return pArr[1]; //return value
+        }
+    }
+	function zfill(num, len) {
+	return (Array(len).join("0") + num).slice(-len);}
+</script>
+
+
+<script type="text/javascript">
+ var station = getParamValue("stationid");
+ var river = getParamValue("river");
+
+function retrievesar()
+{
+	dataset = '';
+	// AJAX in the data file
+    $.ajax({
+        type: "GET",
+        url: "data/rmsar/Station_" + zfill(station, 3) + ".txt",
+		async: false,
+        dataType: "text",
+        success: function(data)
+		{
+		  dataset=String(data);
+		}
+        });
+		return dataset;
+}
+
+function retrievekmeans()
+{
+	dataset = '';
+	// AJAX in the data file
+    $.ajax({
+        type: "GET",
+        url: "data/kmeans/Station_" + zfill(station, 3)  + ".txt",
+		async: false,
+        dataType: "text",
+        success: function(data)
+		{
+		  dataset=String(data);
+		}
+        });
+		return dataset;
+}
+
+
+function load()
+{
+	var rmsardata = [],
+	kmeansdata = [];
+
+	
+	gfsdata = retrievesar();
+	lines = gfsdata.split('\n');
+	for (i = 1; i < lines.length; i++) {
+	var items = lines[i].split(',');
+		rmsardata.push([new Date(items[0]).getTime(), +items[1]]);
+	}
+
+	ecmwfdata = retrievekmeans();
+	lines = ecmwfdata.split('\n');
+	for (i = 1; i < lines.length; i++) {
+	var items = lines[i].split(',');
+		kmeansdata.push([new Date(items[0]).getTime(), +items[1]]);
+	}
+        Highcharts.setOptions({
+           global: {
+              useUTC: false
+           }
+        });
+	var chart = Highcharts.chart('container', {
+	chart: {
+			zoomType: 'x',
+			panning: true,
+			panKey: 'shift'
+		},
+	title: {
+	  text: "Altimeter Height Comparison"
+	},
+	subtitle: {
+	  text: "Station ID: " + station + ", River: " + river
+	},
+	xAxis: {
+	  type: 'datetime'
+	},
+	yAxis: {
+	  title: {
+		text: 'Water Height (m)'
+	  },
+	  labels: {
+        format: '{value:.2f}'
+	  },
+	  minTickInterval: 0.01
+	},
+	tooltip: {
+		xDateFormat: '%d-%m-%Y',
+	  crosshairs: true,
+	  shared: true,
+	  valueSuffix: " m"
+	},
+	legend: {},
+	series: [{
+	  name: 'Static River Width-based Height',
+	  data: kmeansdata,
+	  type: 'spline',
+	  marker: {
+		enabled: true,
+		radius: 3		
+	  },
+	  color:'green',
+	  zIndex: 1,
+	  states: {
+		hover: {			
+		  lineWidthPlus: 0
+		}
+	  }
+	},{
+	  name: 'Dynamic River Width-based Height with IQR Filtering',
+	  data: rmsardata,
+	  type: 'spline',
+		marker: {
+			enabled: true,
+			radius: 3
+		},
+	  color:'red',
+	  zIndex: 1,
+		states: {
+			hover: {
+				lineWidthPlus: 0
+			}
+		}
+	}]
+	});
+
+}
+</script>
+<style>
+.selector {
+	position: absolute;
+	right: 20px;
+	top: 368px;
+}
+.errormessage {
+	position: absolute;
+	width:200px;
+	left:50%;
+	margin-left:-100px;
+	top: 60px;
+    color: red;
+    padding: 20px;
+    font-size: 20px;
+    border: 2px;
+    cursor: pointer;
+}
+.selectyear {
+    background-color: #444244;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px;
+    cursor: pointer;
+}
+
+</style>
+</head>
+<body onload="load()">
+<div id="container" style="width: 100%; height: 400px; margin: 0 auto"></div>
+</body>
