@@ -1,4 +1,4 @@
-# Jason3CludComputing
+# Jason 3 CludComputing
 The "www" directory is the Jason 3 server hosted at UW.
 
 "HeightExtractor" C# based code is used to:
