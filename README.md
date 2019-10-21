@@ -1,4 +1,12 @@
-# Jason 3 CludComputing
+# Google Earth Engine based Jason 3 height visualization
+
+# About the system
+The frontend portal of this system shows 166 virtual station locations of JASON-3 altimeter that cross a river in South and Southeast Asia. At these locations, two different types of altimeter height extraction are shown in near real-time. One is based on using only JASON-3 altimeter and assuming a static (fixed) river with. The other is based on latest river condition that is inferred from the most recent Sentinel-1 SAR imagery. The SAR image helps identify the most likely river width around the time of the JASON-3 overpass, which is then used to extract height only over the track that has the highest confidence of having water. For rivers that frequently change in width and direction due to seasonal hydrology (monsoon) or human impacts (dams, barrages, diversions), such a SAR-based JASON-3 altimeter height extraction has been shown to improve JASON-3 height estimation accuracy for medium to large rivers (> 300 m). The analysis to infer latest river conditions is done in a cloud computing environment using Google Earth Engine, which makes the entire process very efficient and minimizes the need for data download. This work is experimental in nature and users should use the estimated heights at their own risk. Our vision for the future is that such a system will cater to the strengths of the planned SWOT and NISAR missions, along with altimeters that will be flying by 2021, and rapidly provide users anywhere in the world, the best possible height estimate in near real-time to enable important decisions on the fly. 
+
+# Citation
+The standard citation for this portal and data is “Biswas, N., F. Hossain, M. Bonnema, H. Lee and M.A. Okeowo (2019) An Altimeter Height Extraction Technique for Dynamically Changing Rivers of South and South-East Asia, Remote Sensing of the Environment, vol. 221, pp. 24-37 (https://doi.org/10.1016/j.rse.2018.10.033).
+
+
 The "www" directory is the Jason 3 server hosted at UW.
 
 "HeightExtractor" C# based code is used to:
