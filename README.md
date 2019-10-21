@@ -6,7 +6,7 @@ The frontend portal of this system shows 166 virtual station locations of JASON-
 # Citation
 The standard citation for this portal and data is “Biswas, N., F. Hossain, M. Bonnema, H. Lee and M.A. Okeowo (2019) An Altimeter Height Extraction Technique for Dynamically Changing Rivers of South and South-East Asia, Remote Sensing of the Environment, vol. 221, pp. 24-37 (https://doi.org/10.1016/j.rse.2018.10.033).
 
-
+# Directory Structure
 The "www" directory is the Jason 3 server hosted at UW.
 
 "HeightExtractor" C# based code is used to:
