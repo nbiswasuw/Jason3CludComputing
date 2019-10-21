@@ -59,7 +59,7 @@ namespace HeightExtractor
 
                 List<string> jason3Files = new List<string>();
                 FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create("ftp://ftp-access.aviso.altimetry.fr/geophysical-data-record/jason-3/igdr/latest_data/");
-                ftpRequest.Credentials = new NetworkCredential("nbiswas@uw.edu", "vWyEg5");
+                ftpRequest.Credentials = new NetworkCredential("username", "password");
                 ftpRequest.Method = WebRequestMethods.Ftp.ListDirectory;
                 FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
                 StreamReader streamReader = new StreamReader(response.GetResponseStream());
